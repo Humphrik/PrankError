@@ -25,33 +25,44 @@ public class WhatDoesThisDo {
 	public static Clip clip;
 	static String relativePath;
 	public static void main(String[] args) {
+		//Take note of file names, as they must vary between eclipse and the java app.
 		try {
-			relativePath = new File(".").getCanonicalPath();
+			relativePath = new File(".").getCanonicalPath(); //Determines file path for the computer.
+			//This is only needed for the executable jar version.
+			//IMPORTANT: TO RUN IN ECLIPSE, CHANGE RELATIVE PATH TO "src\\content" (see below)
+			relativePath = "src\\content";
 		} catch (IOException e1) {
 		}
 		c.gridy = 0;
 		c.insets = new Insets(10,0,10,0);
+		//Formatting for panel
 		panel.add(label,c);
 		c.gridy = 1;
+		//Additional formatting for button.
 		panel.add(dismiss, c);
-		dismiss.setEnabled(false);
+		dismiss.setEnabled(false); //It cannot be clicked.
 		frame.add(panel);
 		frame.setSize(300, 150);
 		frame.setResizable(false);
 		frame.setVisible(true);
-		frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		play("Error.wav", 0, 6);
-		play("MainMusic.wav", Clip.LOOP_CONTINUOUSLY, -80);
-		SubThread.doThatThing();
+		//Decoration of the window.
+		frame.setLocationRelativeTo(null); //Centered on screen.
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE); 
+		//Important, as it prevents the x button from fully exiting the program.
+		
+		
+		play("Error.wav", 0, 6); //Fake "error" noise.
+		play("MainMusic.wav", Clip.LOOP_CONTINUOUSLY, -80); //The music. Starts low....
+		SubThread.doThatThing(); //The volume timer (see SubThread).
 	}
 	public static void play(String filename, int additionalLoops, float volume) { // Creates music for clip.
+		//This is what finds and plays the music/sound clip. (still looking for way to use .mp3, not .wav)
 		try {
 			clip = AudioSystem.getClip();
-			clip.open(AudioSystem.getAudioInputStream(new File(relativePath+"\\Resources\\" + filename)));
-			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			clip.open(AudioSystem.getAudioInputStream(new File(relativePath+"\\Resources\\" + filename))); //See above about file names
+			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN); //Volume control.
 			gainControl.setValue(volume);
-			clip.loop(additionalLoops);
+			clip.loop(additionalLoops); //Loops for specific extra times.
 		} catch (Exception exc) {
 			exc.printStackTrace(System.out);
 		}
